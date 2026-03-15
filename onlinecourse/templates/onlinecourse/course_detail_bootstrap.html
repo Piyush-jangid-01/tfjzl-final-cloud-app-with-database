@@ -84,7 +84,7 @@
 
       <h3>Course Exam</h3>
 
-      <form method="post" action="{% url 'submit' course.id %}">
+      <form method="post" action="{% url 'onlinecourse:submit' course.id %}">
         {% csrf_token %} {% for question in course.question_set.all %}
 
         <div class="card mt-2">
