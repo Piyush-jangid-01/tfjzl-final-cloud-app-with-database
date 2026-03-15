@@ -3,6 +3,8 @@
   <head>
     {% load static %}
 
+    <meta charset="UTF-8" />
+
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -14,16 +16,15 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <meta charset="UTF-8" />
+    <title>Exam Results</title>
   </head>
 
   <body>
-    <!-- Navigation bar -->
+    <!-- Navigation Bar -->
+
     <nav class="navbar navbar-light bg-light">
       <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="{% url 'onlinecourse:index' %}">Home</a>
-        </div>
+        <a class="navbar-brand" href="{% url 'onlinecourse:index' %}"> Home </a>
 
         <ul class="nav navbar-nav navbar-right">
           {% if user.is_authenticated %}
@@ -38,104 +39,60 @@
             </a>
           </li>
 
-          {% else %}
-
-          <li>
-            <form
-              class="form-inline"
-              action="{% url 'onlinecourse:login' %}"
-              method="post"
-            >
-              {% csrf_token %}
-
-              <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Username"
-                  name="username"
-                />
-
-                <input
-                  type="password"
-                  class="form-control"
-                  placeholder="Password"
-                  name="psw"
-                />
-
-                <button class="btn btn-primary" type="submit">Login</button>
-
-                <a
-                  class="btn btn-link"
-                  href="{% url 'onlinecourse:registration' %}"
-                  >Sign Up</a
-                >
-              </div>
-            </form>
-          </li>
-
           {% endif %}
         </ul>
       </div>
     </nav>
 
-    <!-- Page content -->
+    <!-- Page Content -->
 
-    <div class="container-fluid">
-      <h2>{{ course.name }}</h2>
+    <div class="container mt-4">
+      <h2>Exam Results</h2>
 
-      <div class="card-columns-vertical">
-        {% for lesson in course.lesson_set.all %}
+      <!-- Success Message -->
 
-        <div class="card mt-1">
-          <div class="card-header">
-            <h5>Lesson {{ lesson.order|add:1 }}: {{ lesson.title }}</h5>
-          </div>
-
-          <div class="card-body">{{ lesson.content }}</div>
-        </div>
-
-        {% endfor %}
+      <div class="alert alert-success">
+        <h3>Congratulations!</h3>
       </div>
+
+      <!-- Score -->
+
+      <h4>Your Score: {{ score }}</h4>
 
       <hr />
 
-      {% if user.is_authenticated %}
+      <h3>Exam Results</h3>
 
-      <h3>Course Exam</h3>
+      {% for question in course.question_set.all %}
 
-      <form method="post" action="{% url 'onlinecourse:submit' course.id %}">
-        {% csrf_token %} {% for question in course.question_set.all %}
-
-        <div class="card mt-2">
-          <div class="card-header">
-            <h5>{{ question.content }}</h5>
-          </div>
-
-          <div class="card-body">
-            {% for choice in question.choice_set.all %}
-
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                name="choice{{ choice.id }}"
-                value="{{ choice.id }}"
-              />
-
-              <label class="form-check-label"> {{ choice.content }} </label>
-            </div>
-
-            {% endfor %}
-          </div>
+      <div class="card mt-3">
+        <div class="card-header">
+          <strong>{{ question.content }}</strong>
         </div>
 
-        {% endfor %}
+        <div class="card-body">
+          {% for choice in question.choice_set.all %}
 
-        <button class="btn btn-success mt-3">Submit Exam</button>
-      </form>
+          <div>
+            {{ choice.content }} {% if choice.is_correct %}
 
-      {% endif %}
+            <span style="color: green">✔ Correct Answer</span>
+
+            {% endif %}
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+
+      {% endfor %}
+
+      <a
+        href="{% url 'onlinecourse:course_details' course.id %}"
+        class="btn btn-danger mt-3"
+      >
+        Re-test
+      </a>
     </div>
   </body>
 </html>
