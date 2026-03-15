@@ -2,13 +2,18 @@
 <html lang="en">
   <head>
     {% load static %}
+
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <meta charset="UTF-8" />
   </head>
 
@@ -19,17 +24,22 @@
         <div class="navbar-header">
           <a class="navbar-brand" href="{% url 'onlinecourse:index' %}">Home</a>
         </div>
+
         <ul class="nav navbar-nav navbar-right">
           {% if user.is_authenticated %}
+
           <li>
-            <a class="btn btn-link" href="#"
-              >{{ user.first_name }}({{ user.username }})</a
-            >
-            <a class="btn btn-link" href="{% url 'onlinecourse:logout' %}"
-              >Logout</a
-            >
+            <a class="btn btn-link" href="#">
+              {{ user.first_name }} ({{ user.username }})
+            </a>
+
+            <a class="btn btn-link" href="{% url 'onlinecourse:logout' %}">
+              Logout
+            </a>
           </li>
+
           {% else %}
+
           <li>
             <form
               class="form-inline"
@@ -37,6 +47,7 @@
               method="post"
             >
               {% csrf_token %}
+
               <div class="input-group">
                 <input
                   type="text"
@@ -44,13 +55,16 @@
                   placeholder="Username"
                   name="username"
                 />
+
                 <input
                   type="password"
                   class="form-control"
-                  placeholder="Username"
+                  placeholder="Password"
                   name="psw"
                 />
+
                 <button class="btn btn-primary" type="submit">Login</button>
+
                 <a
                   class="btn btn-link"
                   href="{% url 'onlinecourse:registration' %}"
@@ -59,25 +73,31 @@
               </div>
             </form>
           </li>
+
           {% endif %}
         </ul>
       </div>
     </nav>
 
     <!-- Page content -->
+
     <div class="container-fluid">
       <h2>{{ course.name }}</h2>
+
       <div class="card-columns-vertical">
         {% for lesson in course.lesson_set.all %}
+
         <div class="card mt-1">
           <div class="card-header">
-            <h5>Lesson {{lesson.order|add:1}}: {{lesson.title}}</h5>
+            <h5>Lesson {{ lesson.order|add:1 }}: {{ lesson.title }}</h5>
           </div>
-          <div class="card-body">{{lesson.content}}</div>
+
+          <div class="card-body">{{ lesson.content }}</div>
         </div>
+
         {% endfor %}
       </div>
-      <!-- Course detail template changes go here -->
+
       <hr />
 
       {% if user.is_authenticated %}
@@ -99,7 +119,7 @@
               <input
                 class="form-check-input"
                 type="checkbox"
-                name="choice"
+                name="choice{{ choice.id }}"
                 value="{{ choice.id }}"
               />
 
